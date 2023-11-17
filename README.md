@@ -2,8 +2,16 @@
 
 This repository contains a solver for a $9\times 9$ Sudoku board.
 
+## Contents
+
 ## Setup
 
-## Execution
+## Running the solver
 
-## Source tree
+## Features
+
+## Frameworks
+
+## Build status
+
+## Credits
