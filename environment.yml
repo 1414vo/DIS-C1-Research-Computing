@@ -1,6 +1,15 @@
-name: dis_c1
+name: base
 channels:
-  - conda-forge
+  - defaults
 dependencies:
-  - python=3.9
+  - python==3.9.18
+  - conda==23.10.0
+  - setuptools
+  - pip
+  - wheel
+  - conda-content-trust
+  - conda-libmamba-solver
   - numpy
+  - pre-commit
+  - pytest
+prefix: /opt/conda
