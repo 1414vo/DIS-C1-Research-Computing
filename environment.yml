@@ -12,4 +12,5 @@ dependencies:
   - numpy
   - pre-commit
   - pytest
+  - pandas
 prefix: /opt/conda
