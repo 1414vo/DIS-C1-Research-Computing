@@ -13,4 +13,5 @@ dependencies:
   - pre-commit
   - pytest
   - pandas
+  - doxygen
 prefix: /opt/conda
