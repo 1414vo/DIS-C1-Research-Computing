@@ -8,6 +8,8 @@ for each of the core steps - reading, cleaning, preprocessing and validation.
 """
 
 import src.parsing.validation as validation
+import src.parsing.sudoku_parser as sudparser
+import os
 
 
 def test_failures() -> None:
@@ -45,3 +47,21 @@ def test_failures() -> None:
         pass
 
     assert caught_all_failures
+
+
+def test_read():
+    dir = os.path.dirname(os.path.realpath(__file__))
+    board = sudparser.read_board(f"{dir}/samples/sample_sudoku.txt")
+    assert board == [
+        ["0", "0", "0", "|", "0", "0", "7", "|", "0", "0", "0"],
+        ["0", "0", "0", "|", "0", "0", "9", "|", "5", "0", "4"],
+        ["0", "0", "0", "|", "0", "5", "0", "|", "1", "6", "9"],
+        ["-", "-", "-", "+", "-", "-", "-", "+", "-", "-", "-"],
+        ["0", "8", "0", "|", "0", "0", "0", "|", "3", "0", "5"],
+        ["0", "7", "5", "|", "0", "0", "0", "|", "2", "9", "0"],
+        ["4", "0", "6", "|", "0", "0", "0", "|", "0", "8", "0"],
+        ["-", "-", "-", "+", "-", "-", "-", "+", "-", "-", "-"],
+        ["7", "6", "2", "|", "0", "8", "0", "|", "0", "0", "0"],
+        ["1", "0", "3", "|", "9", "0", "0", "|", "0", "0", "0"],
+        ["0", "0", "0", "|", "6", "0", "0", "|", "0", "0", "0"],
+    ]
