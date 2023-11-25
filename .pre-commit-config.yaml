@@ -4,13 +4,16 @@ repos:
     hooks:
       - id: check-yaml
       - id: end-of-file-fixer
+        exclude: test/samples/.*.txt
       - id: trailing-whitespace
+        exclude: test/samples/.*.txt
       - id: mixed-line-ending
       - id: debug-statements
   - repo: https://github.com/psf/black
     rev: 23.11.0
     hooks:
       - id: black
+        exclude: test/samples/.*.txt
         language_version: python3.9
       - id: black-jupyter
         language_version: python3.9
