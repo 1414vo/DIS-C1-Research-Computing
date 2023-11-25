@@ -10,6 +10,7 @@ converting to a numerical format.
 from warnings import warn
 from typing import List
 import scipy.stats as stats
+import numpy as np
 
 
 def clean_line(line: List[chr], length: int) -> List[chr]:
@@ -56,3 +57,64 @@ def clean_input(board: List[List[str]]) -> List[List[str]]:
     true_length = stats.mode(line_lengths, keepdims=False).mode
 
     return list(map(lambda line: clean_line(line, true_length), board))
+
+
+def transform_non_numeric(char: chr) -> chr:
+    """! Transforms any non-numeric character into the '0' character.
+
+    @param char - The relevant character.
+
+    @return '0' if the character is non-numeric, otherwise returns the original character.
+    """
+    if not char.isnumeric():
+        return "0"
+    else:
+        return char
+
+
+def preprocess_input_9_by_9(board: np.ndarray) -> np.ndarray:
+    """! Transforms a 9x9 board containing characters into one containing numbers.
+    Non-numeric characters are interpreted as empty cells.
+
+    @param board - The parsed sudoku board.
+    @returns The finally parsed sudoku board with numerical values.
+    """
+
+    # Apply the transformation to every member of the board
+    board_as_str = np.vectorize(transform_non_numeric)(board)
+
+    # Change the type to the integer type requiring the least memory
+    return board_as_str.astype(np.int8)
+
+
+def preprocess_input_11_by_11(board):
+    """! Transforms a 11x11 board containing characters into one containing numbers.
+    Non-numeric characters not in the 4th/8th row/column are interpreted as empty cells.
+
+    @param board - The parsed sudoku board.
+    @returns The finally parsed sudoku board with numerical values.
+    """
+
+    # Mask the expected boundary rows/columns
+    relevant_indeces = [(i % 4 != 3) for i in range(11)]
+    board = board[relevant_indeces][:, relevant_indeces]
+
+    # After removing, process the board as a 9x9
+    return preprocess_input_9_by_9(board)
+
+
+def preprocess_input(board):
+    """! Transforms a board containing characters into one containing numbers.
+    Non-numeric characters are interpreted as empty cells. The only accepted board
+    sizes are 9x9 and 11x11.
+
+    @param board - The parsed sudoku board.
+    @returns The finally parsed sudoku board with numerical values.
+    """
+
+    if board.shape == (9, 9):
+        return preprocess_input_9_by_9(board)
+    elif board.shape == (11, 11):
+        return preprocess_input_11_by_11(board)
+    else:
+        raise ValueError(f"Provided board should 9x9 or 11x11, received {board.shape}.")
