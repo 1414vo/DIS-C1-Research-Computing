@@ -49,7 +49,8 @@ def test_failures() -> None:
     assert caught_all_failures
 
 
-def test_read():
+def test_read() -> None:
+    """! Tests whether the read_board function has been correctly implemented."""
     dir = os.path.dirname(os.path.realpath(__file__))
     board = sudparser.read_board(f"{dir}/samples/sample_sudoku.txt")
     assert board == [
