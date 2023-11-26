@@ -62,7 +62,7 @@ class BaseBacktracker(BaseLogic):
     def backtrack(self, board: Board) -> None:
         """! Restores the previous valid board state.
         @param board - The board container to modify.
-        @throws ValueError -
+        @throws ValueError - If we are at the root of the backtracking list - likely meaning the board has no solution.
         """
         if len(self.board_memory) == 0:
             raise ValueError("No backtracking to be undone.")
