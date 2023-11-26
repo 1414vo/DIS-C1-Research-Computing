@@ -9,6 +9,7 @@ for each of the core steps - reading, cleaning, preprocessing and validation.
 
 import src.parsing.validation as validation
 import src.parsing.sudoku_parser as sudparser
+import numpy as np
 import os
 
 
@@ -66,3 +67,69 @@ def test_read() -> None:
         ["1", "0", "3", "|", "9", "0", "0", "|", "0", "0", "0"],
         ["0", "0", "0", "|", "6", "0", "0", "|", "0", "0", "0"],
     ]
+
+
+def test_9_x_9() -> None:
+    """! Tests whether the pipeline can parse a clean 9x9 input."""
+    dir = os.path.dirname(os.path.realpath(__file__))
+    board = sudparser.parse(f"{dir}/samples/sample_9x9.txt")
+    assert np.all(
+        board
+        == np.array(
+            [
+                [1, 2, 3, 4, 5, 6, 7, 8, 9],
+                [2, 3, 4, 5, 6, 7, 8, 9, 1],
+                [3, 4, 5, 6, 7, 8, 9, 1, 2],
+                [4, 5, 6, 7, 8, 9, 1, 2, 3],
+                [5, 6, 7, 8, 9, 1, 2, 3, 4],
+                [6, 7, 8, 9, 1, 2, 3, 4, 5],
+                [7, 8, 9, 1, 2, 3, 4, 5, 6],
+                [8, 9, 1, 2, 3, 4, 5, 6, 7],
+                [9, 1, 2, 3, 4, 5, 6, 7, 0],
+            ]
+        )
+    )
+
+
+def test_11_x_11() -> None:
+    """! Tests whether the pipeline can parse a clean 11x11 input."""
+    dir = os.path.dirname(os.path.realpath(__file__))
+    board = sudparser.parse(f"{dir}/samples/sample_11x11.txt")
+    assert np.all(
+        board
+        == np.array(
+            [
+                [1, 2, 0, 4, 5, 6, 7, 8, 9],
+                [2, 3, 4, 5, 6, 7, 8, 9, 1],
+                [3, 4, 5, 6, 7, 8, 9, 1, 2],
+                [4, 5, 6, 7, 0, 9, 1, 2, 3],
+                [5, 6, 7, 8, 9, 1, 2, 3, 4],
+                [6, 7, 8, 9, 1, 2, 3, 4, 5],
+                [7, 0, 9, 1, 2, 3, 4, 5, 6],
+                [8, 9, 1, 2, 3, 4, 5, 6, 7],
+                [9, 1, 2, 3, 4, 5, 6, 7, 0],
+            ]
+        )
+    )
+
+
+def test_cleaning() -> None:
+    """! Tests whether the pipeline can clean up a board with different artifacts."""
+    dir = os.path.dirname(os.path.realpath(__file__))
+    board = sudparser.parse(f"{dir}/samples/noisy_11x11.txt")
+    assert np.all(
+        board
+        == np.array(
+            [
+                [1, 2, 0, 4, 5, 6, 7, 8, 9],
+                [2, 3, 4, 5, 6, 7, 8, 9, 1],
+                [3, 4, 5, 6, 7, 8, 9, 1, 2],
+                [4, 5, 6, 7, 0, 9, 1, 2, 3],
+                [5, 6, 7, 8, 9, 1, 2, 3, 4],
+                [6, 7, 8, 9, 1, 2, 3, 4, 5],
+                [7, 0, 9, 1, 2, 3, 4, 5, 6],
+                [8, 9, 1, 2, 3, 4, 5, 6, 7],
+                [9, 1, 2, 3, 4, 5, 6, 7, 0],
+            ]
+        )
+    )
