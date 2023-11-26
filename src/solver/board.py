@@ -4,7 +4,7 @@
 @details A structure representing the state of the board. It is responsible for keeping
 consistent representations of the correct numbers, as well as all possibilites for each cell.
 
-@author Created by I. Petrov on 25/11/2023
+@author Created by I. Petrov on 26/11/2023
 """
 
 import numpy as np
@@ -76,10 +76,10 @@ class Board:
                 for num in range(1, 10):
                     if num in self.board[i, :]:
                         cell_possibilities[i, j].discard(num)
-                        break
+                        continue
                     if num in self.board[:, j]:
                         cell_possibilities[i, j].discard(num)
-                        break
+                        continue
                     block_x, block_y = i // 3, j // 3
                     if (
                         num
@@ -88,7 +88,7 @@ class Board:
                         ]
                     ):
                         cell_possibilities[i, j].discard(num)
-            return cell_possibilities
+        return cell_possibilities
 
     def update(self, row: int, col: int, value: int) -> None:
         """! Enters a value for a particular cell if possible.
