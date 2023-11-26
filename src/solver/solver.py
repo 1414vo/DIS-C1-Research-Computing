@@ -25,6 +25,7 @@ class SudokuSolver:
         file_path: str,
         logic_rules: List[BaseLogic] = None,
         backtracker: BaseBacktracker = NaiveBacktracker,
+        print_results=True,
     ):
         """! Creates a solver wrapper for solving a board and displaying the sudoku logic.
 
@@ -33,6 +34,7 @@ class SudokuSolver:
         @param backtracker - The backtracking algorithm to apply when a"""
 
         self.is_solvable = None
+        self.print_results = print_results
 
         # Read from given file
         try:
@@ -88,7 +90,7 @@ class SudokuSolver:
         @param rules - A list of logic rule instances.
         @param backtracker - The instance of a backtracking algorithm.
 
-        @return Whether the step succeeded.
+        @return Whether the sudoku was solved after the step.
         """
         backtrack_result = True
         rule_result = False
@@ -145,8 +147,12 @@ class SudokuSolver:
         while self.is_solvable is None and n_steps < max_steps:
             step_result = self.execute_step(rules, backtracker)
             n_steps += 1
+            if step_result:
+                return True
+            elif step_result is not None:
+                return False
 
-        return step_result
+        return False
 
     def __str__(self):
         """! Creates a string representation of the current state."""
