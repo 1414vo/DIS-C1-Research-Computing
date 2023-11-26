@@ -11,6 +11,7 @@ from warnings import warn
 from typing import List
 import scipy.stats as stats
 import numpy as np
+from src.exceptions import InvalidBoardException
 
 
 def clean_line(line: List[chr], length: int) -> List[chr]:
@@ -117,4 +118,6 @@ def preprocess_input(board):
     elif board.shape == (11, 11):
         return preprocess_input_11_by_11(board)
     else:
-        raise ValueError(f"Provided board should 9x9 or 11x11, received {board.shape}.")
+        raise InvalidBoardException(
+            f"Provided board should 9x9 or 11x11, received {board.shape}."
+        )

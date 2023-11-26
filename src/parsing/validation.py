@@ -7,6 +7,7 @@ the correct shape for a sudoku board.
 @author Created by I. Petrov on 25/11/2023
 """
 import numpy as np
+from src.exceptions import InvalidBoardException
 
 
 def check_input_validity(board: np.ndarray) -> None:
@@ -18,20 +19,20 @@ def check_input_validity(board: np.ndarray) -> None:
 
     @param board - A NumPy array containing the cleaned board.
 
-    @throws ValueError if one of the checks is not passed. A message descr
+    @throws InvalidBoardException if one of the checks is not passed. A message descr
     """
     line_length = len(board[0])
 
     # Check if shape is rectangular.
     for i in range(1, len(board)):
         if len(board[i]) != line_length:
-            raise ValueError(
+            raise InvalidBoardException(
                 "Input rows contain a different number of elements - cannot infer board structure. Exiting."
             )
 
     # Check if shape is square.
     if len(board) != len(board[0]):
-        raise ValueError(
+        raise InvalidBoardException(
             f"Provided board should be square, received ({len(board)}, {len(board[0])}) "
             + "- true shape could not be inferred. Exiting"
         )
@@ -44,4 +45,4 @@ def check_input_validity(board: np.ndarray) -> None:
             + f"Instead received a block of shape ({len(board)}, {len(board[0])})"
         )
 
-        raise ValueError(msg)
+        raise InvalidBoardException(msg)

@@ -7,6 +7,7 @@ a naive backtracking algorithm, which guesses arbitrarily.
 @author Created by I. Petrov on 26/11/2023
 """
 from src.logic.base_logic import BaseBacktracker
+from src.exceptions import InvalidBoardException
 from src.solver.board import Board
 
 
@@ -27,7 +28,7 @@ class NaiveBacktracker(BaseBacktracker):
         possible unsolved sell.
 
         @param board - The board to attempt progress on.
-        @throws - ValueError if the backtracker finds a cell with no possibilities.
+        @throws - InvalidBoardException if the backtracker finds a cell with no possibilities.
 
         @return Whether the step succeeded.
         """
@@ -36,7 +37,7 @@ class NaiveBacktracker(BaseBacktracker):
                 if board.board[i, j] == 0:
                     cell_possibilities = board.get_possibilities()
                     if len(cell_possibilities[i, j]) == 0:
-                        raise ValueError("No option for number selection")
+                        raise InvalidBoardException("No option for number selection")
                     iterator = iter(board.possibilities[i, j])
 
                     # Obtain a new guess that hasn't been made before

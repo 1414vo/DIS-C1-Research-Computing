@@ -6,7 +6,7 @@ for each of the core steps - reading, cleaning, preprocessing and validation.
 
 @author Created by I. Petrov on 25/11/2023
 """
-
+from src.exceptions import InvalidBoardException
 import src.parsing.validation as validation
 import src.parsing.sudoku_parser as sudparser
 import numpy as np
@@ -24,7 +24,7 @@ def test_failures() -> None:
         # If there is no error detected, the program will
         # continue to the next line and fail the test
         caught_all_failures = False
-    except ValueError:
+    except InvalidBoardException:
         pass
 
     diff_line_length_board = [["0", "1"], ["0", "1", "2"]]
@@ -34,7 +34,7 @@ def test_failures() -> None:
         # If there is no error detected, the program will
         # continue to the next line and fail the test
         caught_all_failures = False
-    except ValueError:
+    except InvalidBoardException:
         pass
 
     three_by_three_board = [["0", "1", "2"], ["0", "1", "2"], ["0", "1", "2"]]
@@ -44,7 +44,7 @@ def test_failures() -> None:
         # If there is no error detected, the program will
         # continue to the next line and fail the test
         caught_all_failures = False
-    except ValueError:
+    except InvalidBoardException:
         pass
 
     assert caught_all_failures
