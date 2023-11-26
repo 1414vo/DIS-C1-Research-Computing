@@ -7,6 +7,9 @@ the separate parsing modules, including opening the file, pre-processing and val
 """
 
 from typing import List
+import src.parsing.preprocessing as preparse
+import src.parsing.validation as validation
+import numpy as np
 
 
 def read_board(file_path: str) -> List[List[chr]]:
@@ -25,4 +28,21 @@ def read_board(file_path: str) -> List[List[chr]]:
             out += line
             board.append([*line] if line[-1] != "\n" else [*line[:-1]])
         print(f"Raw data: \n{out}")
+    return board
+
+
+def parse(file_path: str) -> np.ndarray:
+    """! Parses the sudoku board from a given file and converts it to a numerical array.
+    The board is initially cleaned and then validated to conform to a 9x9/11x11 shape.
+
+    @param file_path - The location of the sudoku board file.
+
+    @return A numerical array representation of the board.
+    """
+    board = read_board(file_path)
+    board = preparse.clean_input(board)
+    validation.check_input_validity(board)
+
+    board = preparse.preprocess_input(np.array(board))
+
     return board
