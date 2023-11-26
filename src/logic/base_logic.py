@@ -1,7 +1,8 @@
 """!@file base_logic.py
-@brief A class to be used as the basis for all logic components.
+@brief Classes to be used for the basis for all logic components.
 
-@details A class to be used as the basis for all logic components.
+@details Classes to be used for the basis for all logic components. Includes a generic logic class, as well as
+a generic backtracker class.
 
 @author Created by I. Petrov on 26/11/2023
 """
@@ -43,3 +44,26 @@ class BaseLogic:
         @param board - The board to attempt progress on.
         """
         pass
+
+
+class BaseBacktracker(BaseLogic):
+    """! A class that provides the base functionality for a backtracking algorithm."""
+
+    def __init__(self, print_results=False):
+        """! Creates a base backtracking object - which serves a basis of other backtracking algorithms.
+        Should not be used as a component to a solver, as it does nothing.
+
+        @param print_results - A configuration parameter on whether to print the step results.
+        """
+        super(BaseBacktracker, self).__init__(print_results)
+        self.name = "BaseBacktracker"
+        self.board_memory = []
+
+    def backtrack(self, board: Board) -> None:
+        """! Restores the previous valid board state.
+        @param board - The board container to modify.
+        @throws ValueError -
+        """
+        if len(self.board_memory) == 0:
+            raise ValueError("No backtracking to be undone.")
+        board.board = self.board_memory.pop(-1)
