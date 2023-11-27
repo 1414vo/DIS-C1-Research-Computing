@@ -22,8 +22,6 @@ class NaiveBacktracker(BaseBacktracker):
         """
         super(NaiveBacktracker, self).__init__(print_results)
         self.name = "NaiveBacktracker"
-        self.guess_memory = set()
-        self.guess_memory_memory = []
 
     def step(self, board: Board) -> bool:
         """! Attempts to make progress on the board. Attempts to guess a possibility on the first
@@ -40,28 +38,16 @@ class NaiveBacktracker(BaseBacktracker):
                     cell_possibilities = board.get_possibilities()
                     if len(cell_possibilities[i, j]) == 0:
                         raise InvalidBoardException("No option for number selection")
-                    iterator = iter(cell_possibilities[i, j])
-
-                    num = 0
-                    # Obtain a new guess that hasn't been made before
-                    for item in iterator:
-                        if (i, j, item) not in self.guess_memory:
-                            num = item
-
-                    if num == 0:
-                        raise InvalidBoardException("Ran out of backtracking options.")
+                    num = next(iter(cell_possibilities[i, j]))
 
                     # Update the board based on the guess
                     self.board_memory.append(board.board.copy())
-                    self.guess_memory.add((i, j, num))
-                    self.guess_memory_memory.append(copy.deepcopy(self.guess_memory))
+                    self.cell_pos_memory.append(
+                        copy.deepcopy(board.get_possibilities())
+                    )
+                    self.guess_memory.append((i, j, num))
                     board.update(i, j, num)
                     self.print_msg(i + 1, j + 1, num, board)
                     return True
 
         return False
-
-    def backtrack(self, board: Board) -> None:
-        if len(self.board_memory) > 0:
-            self.guess_memory = self.guess_memory_memory.pop(-1)
-        return super().backtrack(board)

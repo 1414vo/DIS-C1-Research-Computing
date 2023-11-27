@@ -59,6 +59,8 @@ class BaseBacktracker(BaseLogic):
         super(BaseBacktracker, self).__init__(print_results)
         self.name = "BaseBacktracker"
         self.board_memory = []
+        self.guess_memory = []
+        self.cell_pos_memory = []
 
     def backtrack(self, board: Board) -> None:
         """! Restores the previous valid board state.
@@ -69,3 +71,6 @@ class BaseBacktracker(BaseLogic):
         if len(self.board_memory) == 0:
             raise InvalidBoardException("No backtracking to be undone.")
         board.board = self.board_memory.pop(-1)
+        board.cell_possibilities = self.cell_pos_memory.pop(-1)
+        last_guess = self.guess_memory.pop(-1)
+        board.cell_possibilities[last_guess[0], last_guess[1]].discard(last_guess[2])
