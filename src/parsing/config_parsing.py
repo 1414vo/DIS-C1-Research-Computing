@@ -12,6 +12,9 @@ import json
 
 import configparser
 from typing import List
+
+from src.exceptions import InvalidStepException
+
 from src.logic.singles_logic import ObviousSingles
 from src.logic.backtracking import NaiveBacktracker
 from src.logic.base_logic import BaseLogic, BaseBacktracker
@@ -22,13 +25,13 @@ def string_to_step(item: str) -> BaseLogic:
 
     @param item - The name of the rule.
 
-    @throws ValueError - if a rule with the given name does not exist.
+    @throws InvalidStepException - if a rule with the given name does not exist.
     @return The corresponding rule class.
     """
     if item == "ObviousSingles":
         return ObviousSingles
 
-    raise ValueError(f"No step called {item} found.")
+    raise InvalidStepException(f"No step called {item} found.")
 
 
 def parse_step_list(entry: List[str]) -> List[BaseLogic]:
@@ -49,14 +52,14 @@ def parse_backtracker(entry: str) -> BaseBacktracker:
     """! Transforms the name of a backtracking algorithm to the corresponding class
 
     @param item - The name of the backtracker.
-    @throws ValueError - if a backtracker with the given name does not exist.
+    @throws InvalidStepException - if a backtracker with the given name does not exist.
     @return The backtracking algorithm class.
     """
 
     if entry == "NaiveBacktracker":
         return NaiveBacktracker
 
-    raise ValueError(f"No backtracker called {entry} found.")
+    raise InvalidStepException(f"No backtracker called {entry} found.")
 
 
 def parse_config(cfg_path: str):
