@@ -40,7 +40,7 @@ def parse_step_list(entry: List[str]) -> List[BaseLogic]:
     @param entry - A list of logic rule names.
     @return The list of logic rule classes.
     """
-    entries = json.load(entry)
+    entries = json.loads(entry)
     step_list = []
     for item in entries:
         step_list.append(string_to_step(item))
@@ -74,7 +74,7 @@ def parse_config(cfg_path: str):
 
     # Handle section existence
 
-    if "Sudoku" not in cfg.sections:
+    if "Sudoku" not in cfg.sections():
         print(
             'No sudoku found - please specify "Sudoku" section in configuration file.'
         )

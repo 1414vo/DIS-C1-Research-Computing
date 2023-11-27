@@ -6,11 +6,15 @@ for each of the core steps - reading, cleaning, preprocessing and validation.
 
 @author Created by I. Petrov on 25/11/2023
 """
-from src.exceptions import InvalidBoardException
+from src.exceptions import InvalidBoardException, InvalidStepException
 import src.parsing.validation as validation
 import src.parsing.sudoku_parser as sudparser
+import src.parsing.config_parsing as cfg_parser
 import numpy as np
 import os
+
+from src.logic.singles_logic import ObviousSingles
+from src.logic.backtracking import NaiveBacktracker
 
 
 def test_failures() -> None:
@@ -133,3 +137,41 @@ def test_cleaning() -> None:
             ]
         )
     )
+
+
+def test_config_parsing():
+    """! Tests whether the configuration parser behaves
+    correctly on valid input."""
+
+    cfg_info = cfg_parser.parse_config("test/configs/sample_config.ini")
+    board_path, step_list, backtracker, visualization = cfg_info
+
+    assert board_path == "test/sample_sudoku.txt"
+    assert len(step_list) == 1
+    assert step_list[0] == ObviousSingles
+    assert backtracker == NaiveBacktracker
+    assert visualization == "text"
+
+
+def test_config_inference():
+    """! Tests whether the configuration parser behaves
+    correctly on valid input."""
+
+    cfg_info = cfg_parser.parse_config("test/configs/sample_config_2.ini")
+    board_path, step_list, backtracker, visualization = cfg_info
+
+    assert board_path == "test/sample_sudoku.txt"
+    assert len(step_list) == 1
+    assert step_list[0] == ObviousSingles
+    assert backtracker == NaiveBacktracker
+    assert visualization == "none"
+
+
+def test_config_errors():
+    """! Tests whether the configuration parser correctly
+    detects invalid configurations."""
+    try:
+        _ = cfg_parser.parse_config("test/configs/sample_config_3.ini")
+        assert False
+    except InvalidStepException:
+        assert True
