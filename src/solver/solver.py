@@ -7,6 +7,7 @@ The rules are executed sequentially and if there is no result, the backtracker i
 
 @author Created by I. Petrov on 26/11/2023
 """
+import copy
 from typing import List
 import src.parsing.sudoku_parser as sudparser
 from src.solver.board import Board
@@ -15,6 +16,8 @@ from src.exceptions import InvalidBoardException
 from src.logic.base_logic import BaseLogic, BaseBacktracker
 from src.logic.backtracking import NaiveBacktracker
 from src.logic.singles_logic import ObviousSingles
+
+from src.animation import animate
 
 
 class SudokuSolver:
@@ -25,16 +28,19 @@ class SudokuSolver:
         file_path: str,
         logic_rules: List[BaseLogic] = None,
         backtracker: BaseBacktracker = NaiveBacktracker,
-        print_results=True,
+        visualization: str = "none",
     ):
         """! Creates a solver wrapper for solving a board and displaying the sudoku logic.
 
         @param file_path - The path to the file containing the board.
         @param logic_rules - A list of logic rules.
-        @param backtracker - The backtracking algorithm to apply when a"""
+        @param backtracker - The backtracking algorithm to apply when a deadlock is reached.
+        @param visualization - What type of visualization to use."""
 
         self.is_solvable = None
-        self.print_results = print_results
+
+        self.print_results = visualization == "text"
+        self.store_states = visualization == "animation"
 
         # Read from given file
         try:
@@ -57,6 +63,11 @@ class SudokuSolver:
             print("Invalid board setup - sudoku has no solution")
             self.is_solvable = False
             return
+
+        # Store states for animation
+        if self.store_states:
+            self.board_states = [self.board.board.copy()]
+            self.possibility_states = [copy.deepcopy(self.board.possibilities)]
 
         # Register logic rules - if not specified, use inferred most optimal set.
         if logic_rules is None:
@@ -146,11 +157,16 @@ class SudokuSolver:
 
         while self.is_solvable is None and n_steps < max_steps:
             step_result = self.execute_step(rules, backtracker)
+
+            if self.store_states:
+                self.board_states.append(self.board.board.copy())
+                self.possibility_states.append(copy.deepcopy(self.board.possibilities))
+
             n_steps += 1
-            if step_result:
-                return True
-            elif step_result is not None:
-                return False
+            if step_result is not None:
+                if self.store_states:
+                    animate(self.board_states, self.possibility_states)
+                return step_result
 
         return False
 
