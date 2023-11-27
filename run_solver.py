@@ -1,3 +1,11 @@
+"""!@file run_solver.py
+@brief A script for solving a sudoku board.
+
+@details A script for solving a sudoku board. Currently accepts only
+input in the form of a 9x9 or 11x11 board.
+
+@author Created by I. Petrov on 26/11/2023
+"""
 import sys
 
 from src.solver.solver import SudokuSolver
