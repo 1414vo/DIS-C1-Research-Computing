@@ -34,6 +34,9 @@ class Board:
             raise ValueError("Invalid board type or shape passed to Board class.")
 
         self.board = np.zeros((9, 9), dtype=np.int8)
+        self.cell_possibilities = np.array(
+            [[set(range(1, 10)) for _ in range(9)] for _ in range(9)]
+        )
 
         for i in range(9):
             for j in range(9):
@@ -66,29 +69,30 @@ class Board:
 
     def get_possibilities(self) -> np.ndarray:
         """! Computes the possibilities for the value in each cell."""
-        cell_possibilities = np.array(
-            [[set(range(1, 10)) for _ in range(9)] for _ in range(9)]
-        )
+        return self.cell_possibilities
+
+    def update_possibilities(self, row, col, value):
+        """! Efficiently updates the possibilities of a cell in a
+        changed row, column or block.
+
+        @param row - The row of the updated cell.
+        @param col - The column of the updated cell.
+        @param value - The value of the updated cell.
+        """
+        # Update row
         for i in range(9):
-            for j in range(9):
-                if self.board[i, j] != 0:
-                    cell_possibilities[i, j] = set([self.board[i, j]])
-                for num in range(1, 10):
-                    if num in self.board[i, :]:
-                        cell_possibilities[i, j].discard(num)
-                        continue
-                    if num in self.board[:, j]:
-                        cell_possibilities[i, j].discard(num)
-                        continue
-                    block_x, block_y = i // 3, j // 3
-                    if (
-                        num
-                        in self.board[
-                            block_x * 3 : block_x * 3 + 3, block_y * 3 : block_y * 3 + 3
-                        ]
-                    ):
-                        cell_possibilities[i, j].discard(num)
-        return cell_possibilities
+            if i != col and self.board[row, i] == 0:
+                self.cell_possibilities[row, i].discard(value)
+
+        # Update column
+        for i in range(9):
+            if i != row and self.board[i, col] == 0:
+                self.cell_possibilities[i, col].discard(value)
+
+        block_idx = get_block_indeces(row, col)
+        for i, j in block_idx:
+            if (i, j) != (row, col) and self.board[i, j] == 0:
+                self.cell_possibilities[i, j].discard(value)
 
     def update(self, row: int, col: int, value: int) -> None:
         """! Enters a value for a particular cell if possible.
@@ -99,11 +103,13 @@ class Board:
 
         @throws ValueError - If one tries to update a cell for which the value is impossible.
         """
-        if value not in self.get_possibilities()[row, col]:
+        if value not in self.cell_possibilities[row, col]:
             raise ValueError(
                 "Attempting to set a value that has been removed as an option."
             )
+        self.cell_possibilities[row, col] = set([value])
         self.board[row, col] = value
+        self.update_possibilities(row, col, value)
 
     def is_solved(self) -> bool:
         """! Checks if the state is solved. Assumes that consistent checks have been performed."""
