@@ -7,7 +7,10 @@ the initial board, the found numbers, as well as the remaining possibilities in 
 @author Created by I. Petrov on 27/11/2023
 """
 import numpy as np
+from typing import List
 from matplotlib import axes
+from matplotlib.animation import FuncAnimation
+import matplotlib.pyplot as plt
 
 
 def draw_state(
@@ -61,3 +64,30 @@ def draw_state(
                         )
     ax.grid(False)
     ax.axis("off")
+
+
+def animate(state_seq: List[np.ndarray], possibility_seq: List[np.ndarray]):
+    """! Animates a sequence of board states.
+
+    @param state_seq - A sequence of board states.
+    @param possibility_seq - A sequence of cell possibilities.
+    """
+    fig, ax = plt.subplots(figsize=(6, 6), dpi=150)
+    plt.axis("off")
+    # Obtain the mask for whether a value was initially set for each cell.
+    initial_setup = np.where(state_seq[0] != 0, True, False)
+
+    def animate_frame(i=0):
+        """! Helper function for generating a FuncAnimation animation.
+        Draws a single state from the sequence."""
+        draw_state(state_seq[i], possibility_seq[i], initial_setup, ax=ax)
+
+    _ = FuncAnimation(
+        fig,
+        animate_frame,
+        frames=len(state_seq),
+        init_func=animate_frame,
+        interval=1500,
+        repeat=True,
+    )
+    plt.show()
