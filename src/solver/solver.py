@@ -40,7 +40,7 @@ class SudokuSolver:
         self.is_solvable = None
 
         self.print_results = visualization == "text"
-        self.store_states = visualization == "animation"
+        self.store_states = visualization == "animate"
 
         # Read from given file
         try:
@@ -67,7 +67,7 @@ class SudokuSolver:
         # Store states for animation
         if self.store_states:
             self.board_states = [self.board.board.copy()]
-            self.possibility_states = [copy.deepcopy(self.board.possibilities)]
+            self.possibility_states = [copy.deepcopy(self.board.cell_possibilities)]
 
         # Register logic rules - if not specified, use inferred most optimal set.
         if logic_rules is None:
@@ -160,9 +160,12 @@ class SudokuSolver:
 
             if self.store_states:
                 self.board_states.append(self.board.board.copy())
-                self.possibility_states.append(copy.deepcopy(self.board.possibilities))
+                self.possibility_states.append(
+                    copy.deepcopy(self.board.cell_possibilities)
+                )
 
             n_steps += 1
+
             if step_result is not None:
                 if self.store_states:
                     animate(self.board_states, self.possibility_states)

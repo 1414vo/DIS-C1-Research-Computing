@@ -146,11 +146,11 @@ def test_config_parsing():
     cfg_info = cfg_parser.parse_config("test/configs/sample_config.ini")
     board_path, step_list, backtracker, visualization = cfg_info
 
-    assert board_path == "test/sample_sudoku.txt"
+    assert board_path == "./test/samples/sample_sudoku.txt"
     assert len(step_list) == 1
     assert step_list[0] == ObviousSingles
     assert backtracker == NaiveBacktracker
-    assert visualization == "text"
+    assert visualization == "animate"
 
 
 def test_config_inference():

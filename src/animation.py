@@ -82,12 +82,14 @@ def animate(state_seq: List[np.ndarray], possibility_seq: List[np.ndarray]):
         Draws a single state from the sequence."""
         draw_state(state_seq[i], possibility_seq[i], initial_setup, ax=ax)
 
-    _ = FuncAnimation(
+    ani = FuncAnimation(
         fig,
         animate_frame,
         frames=len(state_seq),
         init_func=animate_frame,
         interval=1500,
-        repeat=True,
+        repeat=False,
     )
+
     plt.show()
+    return ani
