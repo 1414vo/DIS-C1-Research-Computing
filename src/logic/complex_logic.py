@@ -8,12 +8,13 @@
 from src.sudoku_utils.steps.BaseLogic import BaseLogic
 from src.sudoku_utils.Board import Board
 import numpy as np
+from typing import Tuple
 
 
 class HiddenPointers(BaseLogic):
     """! A class implementing the detction of the Hidden pointers rule."""
 
-    def __init__(self, print_results=False):
+    def __init__(self, print_results: bool = False):
         """! Creates a logic rule to apply the Hidden pointers rule.
 
         @param print_results - A configuration parameter on whether to print the step results.
@@ -24,7 +25,7 @@ class HiddenPointers(BaseLogic):
         # Keep memory of detected pointers, so as to not repeat actions.
         self.applied_pointers = [set() for _ in range(9)]
 
-    def print_msg(self, find_type, idx, num):
+    def print_msg(self, find_type: str, idx: int, num: int):
         """! Prints the finding of the logic rule if text-based reporting is allowed.
 
         @param find_type - Whether the signal was found in a column, row or block.
@@ -34,7 +35,7 @@ class HiddenPointers(BaseLogic):
         if self.print_results:
             print(f"Found hidden pointer of number {num} in {find_type} {idx + 1}.")
 
-    def __check_block(self, block, num):
+    def __check_block(self, block: int, num: int) -> Tuple[str, int]:
         """! Private method for checking a block for a given signal.
 
         @param block - The values of the block.
@@ -53,7 +54,7 @@ class HiddenPointers(BaseLogic):
 
         return None, 0
 
-    def __clean_row(self, board: Board, row, block_col, num):
+    def __clean_row(self, board: Board, row: int, block_col: int, num: int):
         """! Removes the possibilities from the given row.
 
         @param board - The current board state.
@@ -64,7 +65,7 @@ class HiddenPointers(BaseLogic):
             if i // 3 != block_col:
                 board.cell_possibilities[row, i].discard(num)
 
-    def __clean_col(self, board: Board, col, block_row, num):
+    def __clean_col(self, board: Board, col: int, block_row: int, num: int):
         """! Removes the possibilities from the given column.
 
         @param board - The current board state.
@@ -75,7 +76,7 @@ class HiddenPointers(BaseLogic):
             if i // 3 != block_row:
                 board.cell_possibilities[i, col].discard(num)
 
-    def step(self, board: Board):
+    def step(self, board: Board) -> bool:
         """! Attempts to make progress on the board. Checks if a block contains
         values only on a given row/column and removes all possibilities from the other blocks.
 

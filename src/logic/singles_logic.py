@@ -9,6 +9,7 @@ and Hidden singles rules.
 from src.logic.base_logic import BaseLogic
 from src.solver.board import Board
 import numpy as np
+from typing import Tuple
 
 
 class ObviousSingles(BaseLogic):
@@ -45,7 +46,7 @@ class ObviousSingles(BaseLogic):
 class HiddenSingles(BaseLogic):
     """! A class implementing the detction of the Hidden singles rule."""
 
-    def __init__(self, print_results=False):
+    def __init__(self, print_results: bool = False):
         """! Creates a logic rule to apply the Hidden singles rule.
 
         @param print_results - A configuration parameter on whether to print the step results.
@@ -53,7 +54,7 @@ class HiddenSingles(BaseLogic):
         super(HiddenSingles, self).__init__(print_results)
         self.name = "HiddenSingles"
 
-    def __check_rows(self, board: Board):
+    def __check_rows(self, board: Board) -> Tuple[int, int]:
         """! Private method for determining whether there exists a row for which
         there exists a number that can only occur in one cell.
 
@@ -72,7 +73,7 @@ class HiddenSingles(BaseLogic):
 
         return None
 
-    def __check_cols(self, board: Board):
+    def __check_cols(self, board: Board) -> Tuple[int, int]:
         """! Private method for determining whether there exists a column for which
         there exists a number that can only occur in one cell.
 
@@ -91,7 +92,7 @@ class HiddenSingles(BaseLogic):
 
         return None
 
-    def __check_blocks(self, board: Board):
+    def __check_blocks(self, board: Board) -> Tuple[int, int]:
         """! Private method for determining whether there exists a block for which
         there exists a number that can only occur in one cell.
 
@@ -122,7 +123,7 @@ class HiddenSingles(BaseLogic):
 
         return None
 
-    def step(self, board: Board):
+    def step(self, board: Board) -> bool:
         """! Attempts to make progress on the board. Checks if a row, column or block
         conatins only a single possibility for a given number and updates it if so.
 
