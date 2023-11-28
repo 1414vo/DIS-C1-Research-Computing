@@ -5,8 +5,8 @@
 
 @author Created by I. Petrov on 28/11/2023
 """
-from src.sudoku_utils.steps.BaseLogic import BaseLogic
-from src.sudoku_utils.Board import Board
+from src.logic.base_logic import BaseLogic
+from src.solver.board import Board
 import numpy as np
 from typing import Tuple, Set
 
