@@ -1,10 +1,19 @@
+"""!@file test_backtracking.py
+@brief Unit tests for validating backtracking modules.
+
+@details Unit tests for validating backtracking modules.
+
+@author Created by I. Petrov on 26/11/2023
+"""
 import numpy as np
 import copy
 from src.solver.board import Board
-from src.logic.backtracking import NaiveBacktracker
+from src.logic.backtracking import NaiveBacktracker, SelectiveBacktracker
 
 
 def test_naive_backtracker():
+    """! Tests whether the naive backtracker makes sequential choices, and can correctly
+    restore the previous state."""
     board_nums = np.array(
         [
             [0, 0, 0, 0, 0, 0, 0, 0, 7],
@@ -30,3 +39,32 @@ def test_naive_backtracker():
     current_possibilities[0, 0].discard(1)
     assert np.all(board_nums == board.board)
     assert np.all(current_possibilities == board.get_possibilities())
+
+
+def test_selective_backtracker():
+    """! Tests whether the selective backtracker makes optimal choices, and can correctly
+    restore the previous state."""
+    board_nums = np.array(
+        [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 6],
+            [0, 0, 0, 0, 0, 0, 0, 0, 5],
+            [0, 0, 0, 0, 0, 0, 0, 0, 4],
+            [0, 0, 0, 0, 0, 0, 0, 0, 3],
+            [0, 0, 0, 0, 0, 0, 0, 0, 2],
+            [0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [0, 0, 0, 0, 0, 0, 0, 0, 9],
+            [9, 1, 2, 3, 4, 5, 6, 0, 0],
+        ]
+    )
+    board = Board(board_nums)
+    logic = SelectiveBacktracker()
+    logic.step(board)
+
+    print(board.board)
+    cond = board.board[0, 8] != 0 or board.board[8, 8] != 0 or board.board[8, 7] != 0
+    assert cond
+
+    logic.backtrack(board)
+
+    assert np.all(board_nums == board.board)
