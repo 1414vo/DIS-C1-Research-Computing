@@ -1,7 +1,8 @@
 """!@file singles_logic.py
 @brief Logic components that operate on single cells.
 
-@details Logic components that operate on single cells. Currently includes the Obvious singles rule.
+@details Logic components that operate on single cells. Currently includes the Obvious singles
+and Hidden singles rules.
 
 @author Created by I. Petrov on 26/11/2023
 """
