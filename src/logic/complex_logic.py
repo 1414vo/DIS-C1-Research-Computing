@@ -8,7 +8,7 @@
 from src.sudoku_utils.steps.BaseLogic import BaseLogic
 from src.sudoku_utils.Board import Board
 import numpy as np
-from typing import Tuple
+from typing import Tuple, Set
 
 
 class HiddenPointers(BaseLogic):
@@ -110,3 +110,199 @@ class HiddenPointers(BaseLogic):
                     return True
 
         return False
+
+
+class ObviousPairs(BaseLogic):
+    """! A class implementing the detction of the Obvious pairs rule."""
+
+    def __init__(self, print_results: bool = False):
+        """! Creates a logic rule to apply the Obvious pairs rule.
+
+        @param print_results - A configuration parameter on whether to print the step results.
+        """
+        super(ObviousPairs, self).__init__(print_results)
+        self.name = "ObviousPairs"
+
+        # Keeps track of which numbers have succeeded with checks, so we do not
+        # redo the computation.
+        self.pair_memory = {
+            "row": {i: set() for i in range(9)},
+            "col": {i: set() for i in range(9)},
+            "block": {i: set() for i in range(9)},
+        }
+
+    def print_msg(self, find_type: str, idx: int, nums: int):
+        """! Prints the finding of the logic rule if text-based reporting is allowed.
+
+        @param find_type - Whether the signal was found in a column, row or block.
+        @param idx - The index of the row, column or block.
+        @param num - The value of the signal found.
+        """
+        if self.print_results:
+            print(
+                f"Found Obvious Pair {tuple(nums)} in {find_type} {idx + 1}.\
+                   Removing all instances from {find_type}."
+            )
+
+    def __clean_row(
+        self, board: Board, row: int, idxs: Tuple[int, int], nums: Set[int]
+    ):
+        """! Clean the row for the found pair.
+
+        @param board - The current board state.
+        @param row - The index of the row containing the pair.
+        @param idxs - The column indeces of the relevant row.
+        @param nums - The 2 values in the pair.
+        """
+        self.pair_memory["row"][row].add(tuple(sorted(nums)))
+        for i in range(9):
+            # Ignore the relevant pair
+            if i in idxs:
+                continue
+            board.cell_possibilities[row, i] = board.cell_possibilities[row, i] - nums
+
+    def __check_row(self, board: Board, row: int) -> bool:
+        """! Checks a row for a hidden pair
+
+        @param board - The current board state.
+        @param row - The index of the row containing the pair.
+
+        @return Whether the check succeeded.
+        """
+        for i in range(9):
+            # If the cell contains only 2 values,...
+            if len(board.cell_possibilities[row, i]) != 2:
+                continue
+            # Or if it has already been checked - skip
+            elif (
+                tuple(sorted(board.cell_possibilities[row, i]))
+                in self.pair_memory["row"][row]
+            ):
+                continue
+            for j in range(i + 1, 9):
+                if board.cell_possibilities[row, i] == board.cell_possibilities[row, j]:
+                    self.__clean_row(
+                        board, row, [i, j], board.cell_possibilities[row, i]
+                    )
+                    self.print_msg("row", row, board.cell_possibilities[row, i])
+                    return True
+
+        return False
+
+    def __clean_col(
+        self, board: Board, col: int, idxs: Tuple[int, int], nums: Set[int]
+    ):
+        """! Clean the column for the found pair.
+
+        @param board - The current board state.
+        @param row - The index of the column containing the pair.
+        @param idxs - The row indeces of the relevant row.
+        @param nums - The 2 values in the pair.
+        """
+        self.pair_memory["col"][col].add(tuple(sorted(nums)))
+        for i in range(9):
+            if i in idxs:
+                continue
+            board.cell_possibilities[i, col] = board.cell_possibilities[i, col] - nums
+
+    def __check_col(self, board: Board, col: int) -> bool:
+        """! Checks a column for a hidden pair.
+
+        @param board - The current board state.
+        @param col - The index of the column containing the pair.
+
+        @return Whether the check succeeded.
+        """
+        for i in range(9):
+            # If the cell contains only 2 values,...
+            if len(board.cell_possibilities[i, col]) != 2:
+                continue
+            # Or if it has already been checked - skip
+            elif (
+                tuple(sorted(board.cell_possibilities[i, col]))
+                in self.pair_memory["col"][col]
+            ):
+                continue
+            for j in range(i + 1, 9):
+                if board.cell_possibilities[i, col] == board.cell_possibilities[j, col]:
+                    self.__clean_col(
+                        board, col, [i, j], board.cell_possibilities[i, col]
+                    )
+                    self.print_msg("column", col, board.cell_possibilities[i, col])
+                    return True
+
+        return False
+
+    def __clean_block(
+        self, board: Board, block: int, idxs: Tuple[int, int], nums: Set[int]
+    ):
+        """! Clean the block for the found pair.
+
+        @param board - The current board state.
+        @param block - The index of the block containing the pair.
+        @param idxs - The cell indeces of the relevant (flattened) block.
+        @param nums - The 2 values in the pair.
+        """
+        self.pair_memory["block"][block].add(tuple(sorted(nums)))
+        block_x, block_y = (block // 3) * 3, (block % 3) * 3
+        for i in range(9):
+            if i in idxs:
+                continue
+            board.cell_possibilities[block_x + i // 3, block_y + i % 3] = (
+                board.cell_possibilities[block_x + i // 3, block_y + i % 3] - nums
+            )
+
+    def __check_block(self, board: Board, block: int) -> bool:
+        """! Checks a column for a hidden pair.
+
+        @param board - The current board state.
+        @param col - The index of the column containing the pair.
+
+        @return Whether the check succeeded.
+        """
+        block_x, block_y = (block // 3) * 3, (block % 3) * 3
+
+        for i in range(9):
+            i_coords = block_x + i // 3, block_y + i % 3
+
+            # If the cell contains only 2 values,...
+            if len(board.cell_possibilities[i_coords]) != 2:
+                continue
+            # Or if it has already been checked - skip
+            elif (
+                tuple(sorted(board.cell_possibilities[i_coords]))
+                in self.pair_memory["block"][block]
+            ):
+                continue
+            for j in range(i + 1, 9):
+                if (
+                    board.cell_possibilities[i_coords]
+                    == board.cell_possibilities[block_x + j // 3, block_y + j % 3]
+                ):
+                    self.__clean_block(
+                        board, block, [i, j], board.cell_possibilities[i_coords]
+                    )
+                    self.print_msg("block", block, board.cell_possibilities[i_coords])
+                    return True
+
+        return False
+
+    def step(self, board: Board):
+        """! Attempts to make progress on the board. Checks if a block contains
+        values only on a given row/column and removes all possibilities from the other blocks.
+
+        @param board - The board to attempt progress on.
+
+        @return Whether the step succeeded.
+        """
+        success = False
+
+        for i in range(9):
+            row_result = self.__check_row(board, i)
+            col_result = self.__check_col(board, i)
+            block_result = self.__check_block(board, i)
+
+            if not success:
+                success = row_result or col_result or block_result
+
+        return success
