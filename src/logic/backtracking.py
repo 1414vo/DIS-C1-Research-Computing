@@ -84,7 +84,7 @@ class SelectiveBacktracker(BaseBacktracker):
         i, j = np.unravel_index(n_possibilities.argmin(), (9, 9))
 
         # If there is a cell with no possibilities, report the error.
-        if len(board.possibilities[i, j]) == 0:
+        if len(board.cell_possibilities[i, j]) == 0:
             raise InvalidBoardException("No option for number selection")
 
         # Update the board with the new guess.
