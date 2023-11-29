@@ -45,7 +45,8 @@ class SudokuSolver:
         # Read from given file
         try:
             board_value = sudparser.parse(file_path)
-        except InvalidBoardException:
+        except InvalidBoardException as error:
+            print(error)
             print("Invalid input setup - sudoku has no solution")
             self.is_solvable = False
             return
@@ -59,7 +60,8 @@ class SudokuSolver:
             self.board = Board(board_value)
             print("Final preprocessed board:")
             print(self.__str__())
-        except InvalidBoardException:
+        except InvalidBoardException as error:
+            print(error)
             print("Invalid board setup - sudoku has no solution")
             self.is_solvable = False
             return

@@ -8,6 +8,7 @@ consistent representations of the correct numbers, as well as all possibilites f
 """
 
 import numpy as np
+from src.exceptions import InvalidBoardException
 
 
 def get_block_indeces(row, col):
@@ -104,7 +105,7 @@ class Board:
         @throws ValueError - If one tries to update a cell for which the value is impossible.
         """
         if value not in self.cell_possibilities[row, col]:
-            raise ValueError(
+            raise InvalidBoardException(
                 "Attempting to set a value that has been removed as an option."
             )
         self.cell_possibilities[row, col] = set([value])
