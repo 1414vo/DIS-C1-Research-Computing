@@ -65,8 +65,10 @@ class HiddenSingles(BaseLogic):
             for num in range(1, 10):
                 if num in found_nums:
                     continue
-                num_in_cell = [num in cell for cell in board.get_possibilities()[i]]
-                if np.sum(num_in_cell) == 1:
+                num_in_cell = np.array(
+                    [num in cell for cell in board.get_possibilities()[i]], dtype=bool
+                )
+                if np.count_nonzero(num_in_cell) == 1:
                     idx = np.argmax(num_in_cell)
                     board.update(i, idx, num)
                     return (i, idx, num)
@@ -84,8 +86,11 @@ class HiddenSingles(BaseLogic):
             for num in range(1, 10):
                 if num in found_nums:
                     continue
-                num_in_cell = [num in cell for cell in board.get_possibilities()[:, i]]
-                if np.sum(num_in_cell) == 1:
+                num_in_cell = np.array(
+                    [num in cell for cell in board.get_possibilities()[:, i]],
+                    dtype=bool,
+                )
+                if np.count_nonzero(num_in_cell) == 1:
                     idx = np.argmax(num_in_cell)
                     board.update(idx, i, num)
                     return (idx, i, num)
@@ -113,10 +118,11 @@ class HiddenSingles(BaseLogic):
                             for row in board.get_possibilities()[
                                 3 * i : 3 * i + 3, 3 * j : 3 * j + 3
                             ]
-                        ]
+                        ],
+                        dtype=bool,
                     )
 
-                    if np.sum(num_in_cell) == 1:
+                    if np.count_nonzero(num_in_cell) == 1:
                         idx = np.unravel_index(np.argmax(num_in_cell), (3, 3))
                         board.update(i * 3 + idx[0], j * 3 + idx[1], num)
                         return (i * 3 + idx[0], j * 3 + idx[1], num)

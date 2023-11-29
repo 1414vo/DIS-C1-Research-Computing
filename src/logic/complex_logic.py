@@ -44,13 +44,19 @@ class HiddenPointers(BaseLogic):
         @return A pair of values - one for the finding type - row or column. The second is the index of the
         relevant row/column. If there is no signal, the first value of the tuple is None.
         """
-        has_num = [[num in cell for cell in row] for row in block]
+        has_num = np.array([[num in cell for cell in row] for row in block])
+
         in_col = np.sum(has_num, axis=0)
-        if np.all(sorted(in_col) == [0, 0, 3]) or np.all(sorted(in_col) == [0, 0, 2]):
-            return "column", in_col.argmax()
+        # To avoid re-computation
+        max_col = in_col.argmax()
+        if np.count_nonzero(in_col) == 1 and in_col[max_col] != 1:
+            return "column", max_col
+
         in_row = np.sum(has_num, axis=1)
-        if np.all(sorted(in_row) == [0, 0, 3]) or np.all(sorted(in_row) == [0, 0, 2]):
-            return "row", in_row.argmax()
+        # To avoid re-computation
+        max_row = in_row.argmax()
+        if np.count_nonzero(in_row) == 1 and in_row[max_row] != 1:
+            return "row", max_row
 
         return None, 0
 

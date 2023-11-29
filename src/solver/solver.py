@@ -136,7 +136,7 @@ class SudokuSolver:
 
         return None
 
-    def run(self, max_steps: int = 100000) -> bool:
+    def run(self, max_steps: int = 300000) -> bool:
         """! Executes steps sequentially until either a solution is reached or a lot of time has passed.
 
         @param max_steps - The maximum amount of steps the
