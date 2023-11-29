@@ -14,7 +14,7 @@ import numpy as np
 import os
 
 from src.logic.singles_logic import ObviousSingles
-from src.logic.backtracking import NaiveBacktracker
+from src.logic.backtracking import NaiveBacktracker, SelectiveBacktracker
 
 
 def test_failures() -> None:
@@ -161,9 +161,9 @@ def test_config_inference():
     board_path, step_list, backtracker, visualization = cfg_info
 
     assert board_path == "test/sample_sudoku.txt"
-    assert len(step_list) == 1
+    assert len(step_list) == 4
     assert step_list[0] == ObviousSingles
-    assert backtracker == NaiveBacktracker
+    assert backtracker == SelectiveBacktracker
     assert visualization == "none"
 
 

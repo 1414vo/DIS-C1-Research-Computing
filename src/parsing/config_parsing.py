@@ -15,8 +15,9 @@ from typing import List
 
 from src.exceptions import InvalidStepException
 
-from src.logic.singles_logic import ObviousSingles
-from src.logic.backtracking import NaiveBacktracker
+from src.logic.singles_logic import ObviousSingles, HiddenSingles
+from src.logic.complex_logic import HiddenPointers, ObviousPairs
+from src.logic.backtracking import NaiveBacktracker, SelectiveBacktracker
 from src.logic.base_logic import BaseLogic, BaseBacktracker
 
 
@@ -30,6 +31,12 @@ def string_to_step(item: str) -> BaseLogic:
     """
     if item == "ObviousSingles":
         return ObviousSingles
+    elif item == "HiddenSingles":
+        return HiddenSingles
+    elif item == "HiddenPointers":
+        return HiddenPointers
+    elif item == "ObviousPairs":
+        return ObviousPairs
 
     raise InvalidStepException(f"No step called {item} found.")
 
@@ -58,6 +65,8 @@ def parse_backtracker(entry: str) -> BaseBacktracker:
 
     if entry == "NaiveBacktracker":
         return NaiveBacktracker
+    elif entry == "SelectiveBacktracker":
+        return SelectiveBacktracker
 
     raise InvalidStepException(f"No backtracker called {entry} found.")
 
@@ -112,20 +121,20 @@ def parse_config(cfg_path: str):
         print(
             "Warning: No solver configuration found - defaulting to infered optimal setup"
         )
-        step_list = [ObviousSingles]
-        backtracker = NaiveBacktracker
+        step_list = [ObviousSingles, HiddenSingles, HiddenPointers, ObviousPairs]
+        backtracker = SelectiveBacktracker
     else:
         if "logic" not in cfg["Solver"]:
             print("Warning: No logic order defined - using default logic setup.")
-            step_list = [ObviousSingles]
+            step_list = [ObviousSingles, HiddenSingles, HiddenPointers, ObviousPairs]
         else:
             step_list = parse_step_list(cfg["Solver"]["logic"])
 
         if "backtracker" not in cfg["Solver"]:
             print(
-                "Warning: No backtracking algorithm specified - using NaiveBacktracker"
+                "Warning: No backtracking algorithm specified - using SelectiveBacktracker"
             )
-            backtracker = NaiveBacktracker
+            backtracker = SelectiveBacktracker
         else:
             backtracker = parse_backtracker(cfg["Solver"]["backtracker"])
 
