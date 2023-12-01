@@ -144,13 +144,14 @@ def test_config_parsing():
     correctly on valid input."""
 
     cfg_info = cfg_parser.parse_config("test/configs/sample_config.ini")
-    board_path, step_list, backtracker, visualization = cfg_info
+    board_path, output_path, step_list, backtracker, visualization = cfg_info
 
     assert board_path == "./test/samples/sample_sudoku.txt"
     assert len(step_list) == 1
     assert step_list[0] == ObviousSingles
     assert backtracker == NaiveBacktracker
     assert visualization == "animate"
+    assert output_path == "./output/sample_test.sol"
 
 
 def test_config_inference():
@@ -158,13 +159,14 @@ def test_config_inference():
     correctly on valid input."""
 
     cfg_info = cfg_parser.parse_config("test/configs/sample_config_2.ini")
-    board_path, step_list, backtracker, visualization = cfg_info
+    board_path, output_path, step_list, backtracker, visualization = cfg_info
 
     assert board_path == "test/sample_sudoku.txt"
     assert len(step_list) == 1
     assert step_list[0] == ObviousSingles
     assert backtracker == NaiveBacktracker
     assert visualization == "none"
+    assert output_path[:8] == "./output"
 
 
 def test_config_errors():

@@ -12,6 +12,7 @@ import json
 
 import configparser
 from typing import List
+from datetime import datetime
 
 from src.exceptions import InvalidStepException
 
@@ -128,5 +129,28 @@ def parse_config(cfg_path: str):
             backtracker = NaiveBacktracker
         else:
             backtracker = parse_backtracker(cfg["Solver"]["backtracker"])
+            
+    if "Output" not in cfg:
+        print("Warning: No output folder specified - will not save solution.")
+        output_path = None
+    else:
+        if "output_folder" not in cfg["Output"]:
+            print("Warning: No output folder specified, will store solution in \output")
+            output_folder = './output'
+        else:
+            output_folder = cfg["Output"]["output_folder"]
+            
+            if output_folder[-1] in ['/', '\\']:
+                print("Warning: Output folder should not end in a slash.")
+                output_folder = output_folder[:-1]
+        
+        if "output_name" not in cfg["Output"]:
+            print("Warning: No output name specified, will use current time and date.")
+            now = datetime.now()
+            output_name = now.strftime("%d_%m_%H_%M_%S.sol")
+        else:
+            output_name = cfg["Output"]["output_name"]
+            
+        output_path = f'{output_folder}/{output_name}'  
 
-    return board_path, step_list, backtracker, visualization
+    return board_path, output_path, step_list, backtracker, visualization
