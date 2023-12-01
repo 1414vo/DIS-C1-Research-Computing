@@ -145,6 +145,7 @@ class SudokuSolver:
         if not self.is_solvable and self.is_solvable is not None:
             print("The board has no solution")
             return False
+        
         # Instantiate rules and backtracker
 
         rules = []
@@ -156,8 +157,10 @@ class SudokuSolver:
         n_steps = 0
 
         while self.is_solvable is None and n_steps < max_steps:
+            
             step_result = self.execute_step(rules, backtracker)
 
+            # Store state sequence for animation
             if self.store_states:
                 self.board_states.append(self.board.board.copy())
                 self.possibility_states.append(
@@ -166,6 +169,7 @@ class SudokuSolver:
 
             n_steps += 1
 
+            # Animate state sequence if we have reached a solution
             if step_result is not None:
                 if self.store_states:
                     animate(self.board_states, self.possibility_states)
@@ -175,6 +179,8 @@ class SudokuSolver:
         return False
     
     def get_solution(self):
+        """! Obtains the solution, if one has been reached.
+        @return The board state if the board has been solved."""
         if not self.board.is_solved():
             return None
         

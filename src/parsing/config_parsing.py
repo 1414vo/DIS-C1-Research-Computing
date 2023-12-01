@@ -11,7 +11,7 @@ given value.
 import json
 
 import configparser
-from typing import List
+from typing import List, Tuple
 from datetime import datetime
 
 from src.exceptions import InvalidStepException
@@ -63,12 +63,15 @@ def parse_backtracker(entry: str) -> BaseBacktracker:
     raise InvalidStepException(f"No backtracker called {entry} found.")
 
 
-def parse_config(cfg_path: str):
+def parse_config(cfg_path: str) -> Tuple[str, str, List[BaseLogic], BaseBacktracker, str]:
     """! Obtains the setup for a given configuration. If possible will default
     to a set of parameters if they are not specified. The default configurations are
     to use no visualization and the best inferred rule setup.
 
-    @param cfg_path - The location of the configuration.
+    @param cfg_path The location of the configuration.
+    
+    @return         A tuple, containing the input file location, output location,
+    algorithm logic steps, backtracking algorithm and visualization method.
     """
     cfg = configparser.ConfigParser()
     cfg.read(cfg_path)
@@ -130,6 +133,8 @@ def parse_config(cfg_path: str):
         else:
             backtracker = parse_backtracker(cfg["Solver"]["backtracker"])
             
+    # Handle output path configuration
+    
     if "Output" not in cfg:
         print("Warning: No output folder specified - will not save solution.")
         output_path = None

@@ -45,6 +45,7 @@ if __name__ == "__main__":
     )
     success = solver.run()
     
+    # Print solution upon reaching it.
     if success and output_path is not None:
         try:
             output_str = str(solver.get_solution())
