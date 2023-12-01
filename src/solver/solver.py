@@ -170,8 +170,15 @@ class SudokuSolver:
                 if self.store_states:
                     animate(self.board_states, self.possibility_states)
                 return step_result
-
+            
+        print(f"Could not find solution within {max_steps}.")
         return False
+    
+    def get_solution(self):
+        if not self.board.is_solved():
+            return None
+        
+        return self.board
 
     def __str__(self):
         """! Creates a string representation of the current state."""

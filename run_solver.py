@@ -25,13 +25,16 @@ if __name__ == "__main__":
 
     if "." not in path:
         print("Cannot infer file extension - assuming text input.")
+        print("Cannot specify output folder using text input. Will not store output.")
         board_path = path
     elif path.split(".")[-1] == "ini":
-        board_path, step_list, backtracker, visualization = cfg_parse.parse_config(path)
+        board_path, output_path, step_list, backtracker, visualization = cfg_parse.parse_config(path)
     elif path.split(".")[-1] == "txt":
+        print("Cannot specify output folder using text input. Will not store output.")
         board_path = path
     else:
         print("Did not detect configuration extension, assuming text input.")
+        print("Cannot specify output folder using text input. Will not store output.")
         board_path = path
 
     solver = SudokuSolver(
@@ -40,4 +43,14 @@ if __name__ == "__main__":
         backtracker=backtracker,
         visualization=visualization,
     )
-    solver.run()
+    success = solver.run()
+    
+    if success and output_path is not None:
+        try:
+            output_str = str(solver.get_solution())
+            with open(output_path, "w") as f:
+                f.write(output_str)
+        except OSError:
+            print(f"Could not open file {output_path}")
+            exit(1)
+        
