@@ -8,7 +8,7 @@ consistent representations of the correct numbers, as well as all possibilites f
 """
 
 import numpy as np
-
+from src.exceptions import InvalidBoardException
 
 def get_block_indeces(row, col):
     block_id = (row // 3, col // 3)
@@ -67,6 +67,10 @@ class Board:
 
         return out
 
+    def check_validity(self) -> bool:
+        """! Verifies whether all possibility entries are non-empty."""
+        return np.all([len(self.cell_possibilities[i, j]) >= 1 for i in range(9) for j in range(9)])
+    
     def get_possibilities(self) -> np.ndarray:
         """! Computes the possibilities for the value in each cell."""
         return self.cell_possibilities
@@ -104,7 +108,7 @@ class Board:
         @throws ValueError - If one tries to update a cell for which the value is impossible.
         """
         if value not in self.cell_possibilities[row, col]:
-            raise ValueError(
+            raise InvalidBoardException(
                 "Attempting to set a value that has been removed as an option."
             )
         self.cell_possibilities[row, col] = set([value])

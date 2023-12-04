@@ -125,7 +125,7 @@ class SudokuSolver:
 
         # If last rule failed (meaning all failed), backtracker makes a guess.
 
-        if not rule_result:
+        if not rule_result or not self.board.check_validity():
             try:
                 backtracker.step(self.board)
             except InvalidBoardException:

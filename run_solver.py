@@ -9,9 +9,9 @@ input in the form of a 9x9 or 11x11 board.
 import sys
 import src.parsing.config_parsing as cfg_parse
 from src.solver.solver import SudokuSolver
-from src.logic.backtracking import NaiveBacktracker
-from src.logic.singles_logic import ObviousSingles
-
+from src.logic.backtracking import SelectiveBacktracker
+from src.logic.singles_logic import ObviousSingles, HiddenSingles
+from src.logic.complex_logic import HiddenPointers, ObviousPairs
 if __name__ == "__main__":
     if len(sys.argv) == 1:
         print("No configuration passed - terminating.")
@@ -19,10 +19,11 @@ if __name__ == "__main__":
 
     path = sys.argv[1]
 
-    step_list = [ObviousSingles]
-    backtracker = NaiveBacktracker
+    step_list = [ObviousSingles, HiddenSingles, HiddenPointers, ObviousPairs]
+    backtracker = SelectiveBacktracker
     visualization = "none"
-
+    output_path = None
+    
     if "." not in path:
         print("Cannot infer file extension - assuming text input.")
         print("Cannot specify output folder using text input. Will not store output.")
