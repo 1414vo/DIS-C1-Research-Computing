@@ -2,7 +2,8 @@
 @brief Unit tests for validating the parsing procedure.
 
 @details Unit tests for validating the parsing procedure. Contains at least 1 test
-for each of the core steps - reading, cleaning, preprocessing and validation.
+for each of the core steps - reading, cleaning, preprocessing and validation. Also validates
+that the process fails correctly, so that mis-inputs are caught and addressed correctly.
 
 @author Created by I. Petrov on 25/11/2023
 """
@@ -18,7 +19,9 @@ from src.logic.backtracking import NaiveBacktracker, SelectiveBacktracker
 
 
 def test_failures() -> None:
-    """! Tests whether validation can detect different error types."""
+    """! Tests whether validation can detect different error types. Checks
+    that the implementation correctly requires that a consistently square board is
+    provided, and that the board is of size 9x9/11x11(with symbols for boundaries)."""
     caught_all_failures = True
 
     one_row_board = [["0", "1", "2"]]
@@ -55,7 +58,8 @@ def test_failures() -> None:
 
 
 def test_read() -> None:
-    """! Tests whether the read_board function has been correctly implemented."""
+    """! Tests whether the read_board function has been correctly implemented. Loads from the sample sudoku
+    from the sample sudoku file and separates the characters in an array."""
     dir = os.path.dirname(os.path.realpath(__file__))
     board = sudparser.read_board(f"{dir}/samples/sample_sudoku.txt")
     assert board == [
@@ -74,7 +78,8 @@ def test_read() -> None:
 
 
 def test_9_x_9() -> None:
-    """! Tests whether the pipeline can parse a clean 9x9 input."""
+    """! Tests whether the pipeline can parse a clean 9x9 input. Determines that the
+    pipeline correctly handles the 9x9 case."""
     dir = os.path.dirname(os.path.realpath(__file__))
     board = sudparser.parse(f"{dir}/samples/sample_9x9.txt")
     assert np.all(
@@ -96,7 +101,8 @@ def test_9_x_9() -> None:
 
 
 def test_11_x_11() -> None:
-    """! Tests whether the pipeline can parse a clean 11x11 input."""
+    """! Tests whether the pipeline can parse a clean 11x11 input.Determines that the
+    pipeline correctly handles the 11x11 case."""
     dir = os.path.dirname(os.path.realpath(__file__))
     board = sudparser.parse(f"{dir}/samples/sample_11x11.txt")
     assert np.all(
@@ -118,7 +124,8 @@ def test_11_x_11() -> None:
 
 
 def test_cleaning() -> None:
-    """! Tests whether the pipeline can clean up a board with different artifacts."""
+    """! Tests whether the pipeline can clean up a board with different artifacts. Determines that
+    different line lengths are handled correctly, alongside leading/preceding spaces."""
     dir = os.path.dirname(os.path.realpath(__file__))
     board = sudparser.parse(f"{dir}/samples/noisy_11x11.txt")
     assert np.all(
@@ -141,7 +148,8 @@ def test_cleaning() -> None:
 
 def test_config_parsing():
     """! Tests whether the configuration parser behaves
-    correctly on valid input."""
+    correctly on valid input. The assertions must match the provided sample configuration.
+    """
 
     cfg_info = cfg_parser.parse_config("test/configs/sample_config.ini")
     board_path, step_list, backtracker, visualization = cfg_info
@@ -155,7 +163,8 @@ def test_config_parsing():
 
 def test_config_inference():
     """! Tests whether the configuration parser behaves
-    correctly on valid input."""
+    correctly on valid input with missing categories. If said categories are missing,
+    the defaults must be used."""
 
     cfg_info = cfg_parser.parse_config("test/configs/sample_config_2.ini")
     board_path, step_list, backtracker, visualization = cfg_info
