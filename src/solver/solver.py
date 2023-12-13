@@ -45,7 +45,8 @@ class SudokuSolver:
         # Read from given file
         try:
             board_value = sudparser.parse(file_path)
-        except InvalidBoardException:
+        except InvalidBoardException as error:
+            print(error)
             print("Invalid input setup - sudoku has no solution")
             self.is_solvable = False
             return
@@ -59,7 +60,8 @@ class SudokuSolver:
             self.board = Board(board_value)
             print("Final preprocessed board:")
             print(self.__str__())
-        except InvalidBoardException:
+        except InvalidBoardException as error:
+            print(error)
             print("Invalid board setup - sudoku has no solution")
             self.is_solvable = False
             return
@@ -145,7 +147,7 @@ class SudokuSolver:
         if not self.is_solvable and self.is_solvable is not None:
             print("The board has no solution")
             return False
-        
+
         # Instantiate rules and backtracker
 
         rules = []
@@ -157,7 +159,6 @@ class SudokuSolver:
         n_steps = 0
 
         while self.is_solvable is None and n_steps < max_steps:
-            
             step_result = self.execute_step(rules, backtracker)
 
             # Store state sequence for animation
@@ -174,16 +175,16 @@ class SudokuSolver:
                 if self.store_states:
                     animate(self.board_states, self.possibility_states)
                 return step_result
-            
+
         print(f"Could not find solution within {max_steps}.")
         return False
-    
+
     def get_solution(self):
         """! Obtains the solution, if one has been reached.
         @return The board state if the board has been solved."""
         if not self.board.is_solved():
             return None
-        
+
         return self.board
 
     def __str__(self):

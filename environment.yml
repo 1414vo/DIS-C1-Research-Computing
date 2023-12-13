@@ -15,4 +15,6 @@ dependencies:
   - pandas
   - doxygen
   - scipy
+  - line_profiler
+  - matplotlib
 prefix: /opt/conda

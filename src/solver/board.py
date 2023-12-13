@@ -10,6 +10,7 @@ consistent representations of the correct numbers, as well as all possibilites f
 import numpy as np
 from src.exceptions import InvalidBoardException
 
+
 def get_block_indeces(row, col):
     block_id = (row // 3, col // 3)
     return [
@@ -69,8 +70,14 @@ class Board:
 
     def check_validity(self) -> bool:
         """! Verifies whether all possibility entries are non-empty."""
-        return np.all([len(self.cell_possibilities[i, j]) >= 1 for i in range(9) for j in range(9)])
-    
+        return np.all(
+            [
+                len(self.cell_possibilities[i, j]) >= 1
+                for i in range(9)
+                for j in range(9)
+            ]
+        )
+
     def get_possibilities(self) -> np.ndarray:
         """! Computes the possibilities for the value in each cell."""
         return self.cell_possibilities

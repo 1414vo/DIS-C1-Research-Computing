@@ -7,6 +7,7 @@ the separate parsing modules, including opening the file, pre-processing and val
 """
 
 from typing import List
+from warnings import warn
 import src.parsing.preprocessing as preparse
 import src.parsing.validation as validation
 import numpy as np
@@ -39,10 +40,17 @@ def parse(file_path: str) -> np.ndarray:
 
     @return A numerical array representation of the board.
     """
+
     board = read_board(file_path)
     board = preparse.clean_input(board)
+
     validation.check_input_validity(board)
 
     board = preparse.preprocess_input(np.array(board))
+
+    if preparse.has_non_numeric:
+        warn(
+            "Non-numeric character found - all non-numeric characters will default to 0."
+        )
 
     return board

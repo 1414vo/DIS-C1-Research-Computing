@@ -13,6 +13,8 @@ import scipy.stats as stats
 import numpy as np
 from src.exceptions import InvalidBoardException
 
+has_non_numeric = False
+
 
 def clean_line(line: List[chr], length: int) -> List[chr]:
     """! Attempts to clean a line to conform to a given length.
@@ -52,6 +54,9 @@ def clean_input(board: List[List[str]]) -> List[List[str]]:
     correct, it should return the same values.
 
     """
+    global has_non_numeric
+    has_non_numeric = False
+
     line_lengths = [len(board_row) for board_row in board]
 
     # Assume actual width of grid is the mode.
@@ -67,7 +72,10 @@ def transform_non_numeric(char: chr) -> chr:
 
     @return '0' if the character is non-numeric, otherwise returns the original character.
     """
+    global has_non_numeric
+
     if not char.isnumeric():
+        has_non_numeric = True
         return "0"
     else:
         return char

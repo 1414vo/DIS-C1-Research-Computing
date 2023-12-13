@@ -14,8 +14,18 @@ from src.solver.board import Board
 
 def test_board_initialization() -> None:
     """! Tests whether correctly after initialization, the board correctly has
-    the correct number values and cell possibilities.
-    """
+    the correct number values and cell possibilities. Given the board below,
+    determines whether the bottom right corner has only the possibility of an '8' left.
+    Board:
+    [0, 0, 0, 0, 0, 0, 0, 0, 7],
+    [0, 0, 0, 0, 0, 0, 0, 0, 6],
+    [0, 0, 0, 0, 0, 0, 0, 0, 5],
+    [0, 0, 0, 0, 0, 0, 0, 0, 4],
+    [0, 0, 0, 0, 0, 0, 0, 0, 3],
+    [0, 0, 0, 0, 0, 0, 0, 0, 2],
+    [0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [0, 0, 0, 0, 0, 0, 0, 0, 9],
+    [9, 1, 2, 3, 4, 5, 6, 7, 0]"""
     board_nums = np.array(
         [
             [0, 0, 0, 0, 0, 0, 0, 0, 7],
@@ -41,8 +51,9 @@ def test_board_initialization() -> None:
 
 
 def test_board_update():
-    """! Tests whether correctly after initialization, the board correctly has
-    the correct number values and cell possibilities.
+    """! Tests whether the board implementation correctly handles updating an empty
+    board's top left cell. The board should then have the cell possibilities in the
+    given row, column and block updated.
     """
     board_nums = np.zeros((9, 9))
     board = Board(board_nums)

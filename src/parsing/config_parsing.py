@@ -16,8 +16,9 @@ from datetime import datetime
 
 from src.exceptions import InvalidStepException
 
-from src.logic.singles_logic import ObviousSingles
-from src.logic.backtracking import NaiveBacktracker
+from src.logic.singles_logic import ObviousSingles, HiddenSingles
+from src.logic.complex_logic import HiddenPointers, ObviousPairs
+from src.logic.backtracking import NaiveBacktracker, SelectiveBacktracker
 from src.logic.base_logic import BaseLogic, BaseBacktracker
 
 
@@ -31,6 +32,12 @@ def string_to_step(item: str) -> BaseLogic:
     """
     if item == "ObviousSingles":
         return ObviousSingles
+    elif item == "HiddenSingles":
+        return HiddenSingles
+    elif item == "HiddenPointers":
+        return HiddenPointers
+    elif item == "ObviousPairs":
+        return ObviousPairs
 
     raise InvalidStepException(f"No step called {item} found.")
 
@@ -38,11 +45,15 @@ def string_to_step(item: str) -> BaseLogic:
 def parse_step_list(entry: List[str]) -> List[BaseLogic]:
     """! Parses a list of logic rule names.
 
-    @param entry - A list of logic rule names.
+    @param entry A list of logic rule names.
     @return The list of logic rule classes.
     """
     entries = json.loads(entry)
     step_list = []
+
+    if len(entries) == 0:
+        raise InvalidStepException("No logic steps provided")
+
     for item in entries:
         step_list.append(string_to_step(item))
 
@@ -59,17 +70,21 @@ def parse_backtracker(entry: str) -> BaseBacktracker:
 
     if entry == "NaiveBacktracker":
         return NaiveBacktracker
+    elif entry == "SelectiveBacktracker":
+        return SelectiveBacktracker
 
     raise InvalidStepException(f"No backtracker called {entry} found.")
 
 
-def parse_config(cfg_path: str) -> Tuple[str, str, List[BaseLogic], BaseBacktracker, str]:
+def parse_config(
+    cfg_path: str,
+) -> Tuple[str, str, List[BaseLogic], BaseBacktracker, str]:
     """! Obtains the setup for a given configuration. If possible will default
     to a set of parameters if they are not specified. The default configurations are
     to use no visualization and the best inferred rule setup.
 
     @param cfg_path The location of the configuration.
-    
+
     @return         A tuple, containing the input file location, output location,
     algorithm logic steps, backtracking algorithm and visualization method.
     """
@@ -116,46 +131,48 @@ def parse_config(cfg_path: str) -> Tuple[str, str, List[BaseLogic], BaseBacktrac
         print(
             "Warning: No solver configuration found - defaulting to infered optimal setup"
         )
-        step_list = [ObviousSingles]
-        backtracker = NaiveBacktracker
+        step_list = [ObviousSingles, HiddenSingles, HiddenPointers, ObviousPairs]
+        backtracker = SelectiveBacktracker
     else:
         if "logic" not in cfg["Solver"]:
             print("Warning: No logic order defined - using default logic setup.")
-            step_list = [ObviousSingles]
+            step_list = [ObviousSingles, HiddenSingles, HiddenPointers, ObviousPairs]
         else:
             step_list = parse_step_list(cfg["Solver"]["logic"])
 
         if "backtracker" not in cfg["Solver"]:
             print(
-                "Warning: No backtracking algorithm specified - using NaiveBacktracker"
+                "Warning: No backtracking algorithm specified - using SelectiveBacktracker"
             )
-            backtracker = NaiveBacktracker
+            backtracker = SelectiveBacktracker
         else:
             backtracker = parse_backtracker(cfg["Solver"]["backtracker"])
-            
+
     # Handle output path configuration
-    
+
     if "Output" not in cfg:
         print("Warning: No output folder specified - will not save solution.")
         output_path = None
     else:
         if "output_folder" not in cfg["Output"]:
-            print("Warning: No output folder specified, will store solution in \output")
-            output_folder = './output'
+            print(
+                "Warning: No output folder specified, will store solution in \\output"
+            )
+            output_folder = "./output"
         else:
             output_folder = cfg["Output"]["output_folder"]
-            
-            if output_folder[-1] in ['/', '\\']:
+
+            if output_folder[-1] in ["/", "\\"]:
                 print("Warning: Output folder should not end in a slash.")
                 output_folder = output_folder[:-1]
-        
+
         if "output_name" not in cfg["Output"]:
             print("Warning: No output name specified, will use current time and date.")
             now = datetime.now()
             output_name = now.strftime("%d_%m_%H_%M_%S.sol")
         else:
             output_name = cfg["Output"]["output_name"]
-            
-        output_path = f'{output_folder}/{output_name}'  
+
+        output_path = f"{output_folder}/{output_name}"
 
     return board_path, output_path, step_list, backtracker, visualization

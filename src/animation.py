@@ -49,7 +49,7 @@ def draw_state(
                     color="black" if initial_setup[i, j] else "tab:blue",
                 )
             else:
-                # Draws an unsolved cell
+                # Draws an unsolved cell with a 3x3 grid of possibilities
                 for num in range(9):
                     num_x, num_y = num % 3, num // 3
                     if num + 1 in possibilities[i, j]:
@@ -82,6 +82,7 @@ def animate(state_seq: List[np.ndarray], possibility_seq: List[np.ndarray]):
         Draws a single state from the sequence."""
         draw_state(state_seq[i], possibility_seq[i], initial_setup, ax=ax)
 
+    # Animation with an initial frame corresponding to the first state
     ani = FuncAnimation(
         fig,
         animate_frame,
