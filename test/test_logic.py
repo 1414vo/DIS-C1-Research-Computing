@@ -1,4 +1,4 @@
-"""!@file test_parsing.py
+"""!@file test_logic.py
 @brief Unit tests for validating logic modules.
 
 @details Unit tests for validating logic modules. Checks whether each logic module

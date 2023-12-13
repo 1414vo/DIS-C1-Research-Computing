@@ -1,4 +1,4 @@
-"""!@file test_parsing.py
+"""!@file test_board.py
 @brief Unit tests for validating the board generation and possibility computation.
 
 @details Unit tests for validating the board generation and possibility computation.

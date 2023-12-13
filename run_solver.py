@@ -6,16 +6,18 @@ input in the form of a 9x9 or 11x11 board.
 
 @author Created by I. Petrov on 26/11/2023
 """
+import os
 import sys
 import src.parsing.config_parsing as cfg_parse
 from src.solver.solver import SudokuSolver
 from src.logic.backtracking import SelectiveBacktracker
 from src.logic.singles_logic import ObviousSingles, HiddenSingles
 from src.logic.complex_logic import HiddenPointers, ObviousPairs
+
 if __name__ == "__main__":
     if len(sys.argv) == 1:
         print("No configuration passed - terminating.")
-        exit()
+        exit(1)
 
     path = sys.argv[1]
 
@@ -23,13 +25,19 @@ if __name__ == "__main__":
     backtracker = SelectiveBacktracker
     visualization = "none"
     output_path = None
-    
+
     if "." not in path:
         print("Cannot infer file extension - assuming text input.")
         print("Cannot specify output folder using text input. Will not store output.")
         board_path = path
     elif path.split(".")[-1] == "ini":
-        board_path, output_path, step_list, backtracker, visualization = cfg_parse.parse_config(path)
+        (
+            board_path,
+            output_path,
+            step_list,
+            backtracker,
+            visualization,
+        ) = cfg_parse.parse_config(path)
     elif path.split(".")[-1] == "txt":
         print("Cannot specify output folder using text input. Will not store output.")
         board_path = path
@@ -45,14 +53,14 @@ if __name__ == "__main__":
         visualization=visualization,
     )
     success = solver.run()
-    
+
     # Print solution upon reaching it.
     if success and output_path is not None:
         try:
+            os.makedirs(os.path.dirname(output_path), exist_ok=True)
             output_str = str(solver.get_solution())
             with open(output_path, "w") as f:
                 f.write(output_str)
         except OSError:
             print(f"Could not open file {output_path}")
             exit(1)
-        
