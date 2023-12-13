@@ -54,7 +54,7 @@ The scripts allow for setting up different configurations for the solver. For ex
 ### The solver
 The solver supports different methods of solving, all specified by a set and order of logic rules and backtracking.
 A solver must always contain a set of logic rules, (perhaps empty - but this might take too long to run), and a single backtracking algorithm.
-The logic rules must be chosen among `Obvious Singles`, `Hidden Singles`, `Hidden Pointers`, `Obvious Pairs`. More details on them can be found on [the Sudoku.com website]("https://sudoku.com/sudoku-rules").
+The logic rules must be chosen among `Obvious Singles`, `Hidden Singles`, `Hidden Pointers`, `Obvious Pairs`. More details on them can be found on <a href="https://sudoku.com/sudoku-rules">the Sudoku.com website</a>.
 
 The backtracking algorithms available are a simple `Naive Backtracker`, as well as a "smarter" `Selective Backtracker`, which makes progress on the least defined cell. The latter is recommended as it can save a substantial amount of backtracking steps, and is not significantly more computationally expensive.
 
@@ -64,7 +64,7 @@ There are 2 types of visualization - text-based or animation. A text-based visua
 
 The animation will present the full state of the board in the form of a Matplotlib animation. An example of the solver in action can be seen below:
 
-![Solution Example](solution_animation.gif)
+<img src="solution_animation.gif" alt="Solution Example">
 
 ### Documentation
 
@@ -93,6 +93,5 @@ Currently, the build is complete and the program can be used to its full capacit
 ## Credits
 
 The `.pre-commit-config.yaml` configuration file content has been adapted from the Research Computing lecture notes.
-Ideas for the logic rules were taken from [the Sudoku.com website]("https://sudoku.com/sudoku-rules").
-The example sudoku boards were found from [Dimitri Fontaine's Git repository]("https://github.com/dimitri/sudoku/tree/master") and
-[Sudopedia]("http://sudopedia.enjoysudoku.com/Invalid_Test_Cases.html").
+Ideas for the logic rules were taken from <a href="https://sudoku.com/sudoku-rules">the Sudoku.com website</a>.
+The example sudoku boards were found from <a href="https://github.com/dimitri/sudoku/tree/master">Dimitri Fontaine's Git repository</a> and <a href="http://sudopedia.enjoysudoku.com/Invalid_Test_Cases.html">Sudopedia</a>.
