@@ -44,11 +44,15 @@ def string_to_step(item: str) -> BaseLogic:
 def parse_step_list(entry: List[str]) -> List[BaseLogic]:
     """! Parses a list of logic rule names.
 
-    @param entry - A list of logic rule names.
+    @param entry A list of logic rule names.
     @return The list of logic rule classes.
     """
     entries = json.loads(entry)
     step_list = []
+
+    if len(entries) == 0:
+        raise InvalidStepException("No logic steps provided")
+
     for item in entries:
         step_list.append(string_to_step(item))
 
@@ -77,6 +81,8 @@ def parse_config(cfg_path: str):
     to use no visualization and the best inferred rule setup.
 
     @param cfg_path - The location of the configuration.
+
+    @return The found sudoku file, sequence of logic steps, backtracking algorithm and visualization method.
     """
     cfg = configparser.ConfigParser()
     cfg.read(cfg_path)
