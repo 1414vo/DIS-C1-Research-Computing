@@ -46,13 +46,18 @@ if __name__ == "__main__":
         print("Cannot specify output folder using text input. Will not store output.")
         board_path = path
 
+    animation_path = None
+    if visualization == "animate" and output_path is not None:
+        animation_path = output_path + "_animation.gif"
+
     solver = SudokuSolver(
         board_path,
         logic_rules=step_list,
         backtracker=backtracker,
         visualization=visualization,
     )
-    success = solver.run()
+    
+    success = solver.run(animation_path = animation_path)
 
     # Print solution upon reaching it.
     if success and output_path is not None:

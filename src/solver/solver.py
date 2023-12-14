@@ -138,10 +138,11 @@ class SudokuSolver:
 
         return None
 
-    def run(self, max_steps: int = 300000) -> bool:
+    def run(self, max_steps: int = 300000, animation_path: str = None) -> bool:
         """! Executes steps sequentially until either a solution is reached or a lot of time has passed.
 
-        @param max_steps - The maximum amount of steps the
+        @param max_steps - The maximum amount of steps the solver is allowed to take.
+        @param animation_path - The path in which to store the animation_file.
         @return Whether the solver succeeded.
         """
         if not self.is_solvable and self.is_solvable is not None:
@@ -173,7 +174,9 @@ class SudokuSolver:
             # Animate state sequence if we have reached a solution
             if step_result is not None:
                 if self.store_states:
-                    animate(self.board_states, self.possibility_states)
+                    ani = animate(self.board_states, self.possibility_states)
+                    if animation_path is not None:
+                        ani.save(animation_path, writer='imagemagick', fps=10)
                 return step_result
 
         print(f"Could not find solution within {max_steps}.")
