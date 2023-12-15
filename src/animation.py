@@ -66,11 +66,13 @@ def draw_state(
     ax.axis("off")
 
 
-def animate(state_seq: List[np.ndarray], possibility_seq: List[np.ndarray]):
+def animate(state_seq: List[np.ndarray], possibility_seq: List[np.ndarray]) -> FuncAnimation:
     """! Animates a sequence of board states.
 
     @param state_seq - A sequence of board states.
     @param possibility_seq - A sequence of cell possibilities.
+    
+    @return FuncAnimation object representing the animation
     """
     fig, ax = plt.subplots(figsize=(6, 6), dpi=150)
     plt.axis("off")

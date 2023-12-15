@@ -39,6 +39,7 @@ class Board:
             [[set(range(1, 10)) for _ in range(9)] for _ in range(9)]
         )
 
+        # Create the board by performing updates on the known cells
         for i in range(9):
             for j in range(9):
                 if board[i, j] != 0:

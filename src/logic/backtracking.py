@@ -41,12 +41,14 @@ class NaiveBacktracker(BaseBacktracker):
                         raise InvalidBoardException("No option for number selection")
                     num = next(iter(cell_possibilities[i, j]))
 
-                    # Update the board based on the guess
+                    # Store the previous board state
                     self.board_memory.append(board.board.copy())
                     self.cell_pos_memory.append(
                         copy.deepcopy(board.get_possibilities())
                     )
                     self.guess_memory.append((i, j, num))
+                    
+                    # Update the board based on the guess
                     board.update(i, j, num)
                     self.print_msg(i + 1, j + 1, num, board)
                     return True
@@ -87,10 +89,14 @@ class SelectiveBacktracker(BaseBacktracker):
         if len(board.cell_possibilities[i, j]) == 0:
             raise InvalidBoardException("No option for number selection")
 
-        # Update the board with the new guess.
+        
         num = next(iter(board.cell_possibilities[i, j]))
+        
+        # Store previous state in memory
         self.board_memory.append(board.board.copy())
         self.cell_pos_memory.append(copy.deepcopy(board.cell_possibilities))
         self.guess_memory.append((i, j, num))
+        
+        # Update the board with the new guess.
         board.update(i, j, num)
         self.print_msg(i + 1, j + 1, num, board)
