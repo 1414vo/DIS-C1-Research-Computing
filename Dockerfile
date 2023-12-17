@@ -5,7 +5,7 @@ WORKDIR ./ivp24
 COPY . .
 
 RUN apt-get update && apt-get install -y \
-    git
+    git vim
 
 RUN conda env update --file environment.yml --name base
 
