@@ -16,19 +16,19 @@ This repository contains a solver for a $9\times 9$ Sudoku board.
 
 ## Requirements
 
-The user should preferrably have a version of Docker installed in order to ensure correct setup of environments. If that is not possible, the user is recommended to have Conda installed, in order to set up the requirements. If Conda is also not available, make sure that the packages described in `environment.yml` are available and installed.
+The user should preferably have a version of Docker installed in order to ensure the correct setup of environments. If that is not possible, the user is recommended to have Conda installed, in order to set up the requirements. If Conda is also not available, make sure that the packages described in `environment.yml` are available and installed.
 
 ## Setup
 
-We provide two different set up mechanisms using either Docker or Conda. The former is recommended, as it ensures that the environment used is identical to the one used in the development in the project.
+We provide two different set up mechanisms using either Docker or Conda. The former is recommended, as it ensures that the environment used is identical to the one used in the development of the project.
 
 ### Using Docker
 
-To correctly set up the environment, we utilise a Docker image. To build the image before creating the container, you can run.
+To correctly setup the environment, we utilise a Docker image. To build the image before creating the container, you can run.
 
 ```docker build -t ivp24_sudoku .```
 
-The setup image will also add the necessary pre-commit checks to your git repository, ensuring the commits work correctly. You need to have the repository cloned beforehand, otherwise no files will be into the working directory.
+The setup image will also add the necessary pre-commit checks to your git repository, ensuring the commits work correctly. You need to have the repository cloned beforehand, otherwise, no files will be in the working directory.
 
 Afterwards, any time you want to use the code, you can launch a Docker container using:
 
@@ -42,7 +42,7 @@ This copies your keys to the created container and you should be able to run all
 
 ### Using Conda
 
-The primary concern when using Conda is to install the required packages. In this case **make sure to specify an environment name**. Otherwise, you risk overriding your base environment. Installation and activation can be done using the commands:
+The primary concern when using Conda is to install the required packages. In this case, **make sure to specify an environment name**. Otherwise, you risk overriding your base environment. Installation and activation can be done using the commands:
 
 ```conda env create --name <envname> -f environment.yml ```
 ```conda activate <envname> ```
@@ -50,7 +50,7 @@ The primary concern when using Conda is to install the required packages. In thi
 ## Running the solver
 
 There are 2 different ways to run the solver. If you want to run a single sudoku puzzle, you can either:
-- Provide only a text file containing the board. The solver will not display any steps made during the solution, and will use the optimal setup.
+- Provide only a text file containing the board. The solver will not display any steps made during the solution and will use the optimal setup.
 This includes all logic rules, alongside the `Selective backtracker`. An example board can be seen in `test\samples\sample_sudoku.txt`.
 - Provide a full configuration, as seen in `test/configs/sample_config.ini`. You can specify both the solver configuration, as well as the visualization method. Accepted visualization methods include a text-based representation and a matplotlib animation.
 
@@ -60,22 +60,26 @@ The command you would like to run (while in the root folder) is:
 
 ## Features
 
-The scripts allow for setting up different configurations for the solver. For example, if the sudoku that is to be tried is relatively simple, less rules might result in a faster performance. We also allow for different types of visualizations, so that the process is better explained.
+The scripts allow for setting up different configurations for the solver. For example, if the sudoku that is to be tried is relatively simple, fewer rules might result in a faster performance. We also allow for different types of visualizations, so that the process is better explained.
 
 ### The solver
 The solver supports different methods of solving, all specified by a set and order of logic rules and backtracking.
 A solver must always contain a set of logic rules, (perhaps empty - but this might take too long to run), and a single backtracking algorithm.
-The logic rules must be chosen among `Obvious Singles`, `Hidden Singles`, `Hidden Pointers`, `Obvious Pairs`. More details on them can be found on <a href="https://sudoku.com/sudoku-rules">the Sudoku.com website</a>.
+The logic rules must be chosen among `Obvious Singles`, `Hidden Singles`, `Hidden Pointers`, and `Obvious Pairs`. More details on them can be found on <a href="https://sudoku.com/sudoku-rules">the Sudoku.com website</a>.
 
-The backtracking algorithms available are a simple `Naive Backtracker`, as well as a "smarter" `Selective Backtracker`, which makes progress on the least defined cell. The latter is recommended as it can save a substantial amount of backtracking steps, and is not significantly more computationally expensive.
+The backtracking algorithms available are a simple `Naive Backtracker`, as well as a "smarter" `Selective Backtracker`, which makes progress on the least defined cell. The latter is recommended as it can save a substantial amount of backtracking steps and is not significantly more computationally expensive.
 
 ### Visualization
 
 There are 2 types of visualization - text-based or animation. A text-based visualization will present the user with a step-by-step progress report. If a cell is decided, the full board will be displayed, while if only the cell possibilities have changed a single line describing the change will be presented.
 
-The animation will present the full state of the board in the form of a Matplotlib animation. An example of the solver in action can be seen below:
+The animation will present the full state of the board in the form of a Matplotlib animation. It will only be saved if the "Output" section of the configuration file has been specified. An example of the solver in action can be seen below:
 
 <img src="solution_animation.gif" alt="Solution Example" width=400px height="400px"/>
+
+The animation can be viewed by linking Visual Studio Code to the container, or by copying it from the container to the local machine using:
+
+```docker cp <container name>:/ivp24/<source> <destination>```
 
 ### Documentation
 
@@ -83,7 +87,7 @@ All documentation for the repository can be generated through Doxygen by running
 
 ### Output
 
-An output path may be specified in the configuration so that multiple scripts can be run at the same time, with the results being stored in the specified files
+An output path may be specified in the configuration so that multiple scripts can be run at the same time, with the results being stored in the specified files.
 
 ## Frameworks
 
@@ -105,4 +109,4 @@ Currently, the build is complete and the program can be used to its full capacit
 
 The `.pre-commit-config.yaml` configuration file content has been adapted from the Research Computing lecture notes.
 Ideas for the logic rules were taken from <a href="https://sudoku.com/sudoku-rules">the Sudoku.com website</a>.
-The example sudoku boards were found from <a href="https://github.com/dimitri/sudoku/tree/master">Dimitri Fontaine's Git repository</a> and <a href="http://sudopedia.enjoysudoku.com/Invalid_Test_Cases.html">Sudopedia</a>.
+The example sudoku boards were found in <a href="https://github.com/dimitri/sudoku/tree/master">Dimitri Fontaine's Git repository</a> and <a href="http://sudopedia.enjoysudoku.com/Invalid_Test_Cases.html">Sudopedia</a>.

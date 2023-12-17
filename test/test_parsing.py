@@ -15,7 +15,7 @@ import numpy as np
 import os
 
 from src.logic.singles_logic import ObviousSingles
-from src.logic.backtracking import NaiveBacktracker, SelectiveBacktracker
+from src.logic.backtracking import SelectiveBacktracker
 
 
 def test_failures() -> None:
@@ -155,9 +155,9 @@ def test_config_parsing():
     board_path, output_path, step_list, backtracker, visualization = cfg_info
 
     assert board_path == "./test/samples/sample_sudoku.txt"
-    assert len(step_list) == 1
+    assert len(step_list) == 4
     assert step_list[0] == ObviousSingles
-    assert backtracker == NaiveBacktracker
+    assert backtracker == SelectiveBacktracker
     assert visualization == "animate"
     assert output_path == "./output/sample_test.sol"
 

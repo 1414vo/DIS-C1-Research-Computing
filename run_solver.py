@@ -56,8 +56,16 @@ if __name__ == "__main__":
         backtracker=backtracker,
         visualization=visualization,
     )
-    
-    success = solver.run(animation_path = animation_path)
+
+    # Print solution upon reaching it.
+    if output_path is not None:
+        try:
+            os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        except OSError:
+            print(f"Could not create folder {os.path.dirname(output_path)}")
+            exit(1)
+
+    success = solver.run(animation_path=animation_path)
 
     # Print solution upon reaching it.
     if success and output_path is not None:
